@@ -1,7 +1,7 @@
 
 ;; will
 ;; <add a description here>
-;;Error in line number 98 and 101
+;;Error in line number 89 and 92
 
 
 ;; constants
@@ -34,12 +34,6 @@
 (define-map will {token-id: uint} {liscensed-entity-principal: principal, beneficiary-principal: principal, amount: uint } 
 )
 
-;; (define-map degree-data 
-;;     {token-id: uint}
-;;     {data-hash: (buff 32), token-uri: (string-ascii 64)}
-;; )
-
-
 ;; public functions
 ;;
 (define-public (add-Liscensed-entity (adress principal))
@@ -65,15 +59,13 @@
   )
  
     (let ((token-id (+ (var-get curr-token-index) u1)))
-      ;; Access Rights Implementation 
-      ;;  - only verified universities can mint tokens
+
       (asserts! (is-liscensed-entity tx-sender) NOT-LISCENSED-ENTITY)
-      ;;  - only students whose wallets exist can have tokens minted for them
       (asserts! (is-beneficiary owner) NOT-BENEFICIARY)
 
       ;; Check if the token is successfully minted
       (asserts! (register-token owner token-id) FAILED-TO-MINT-ERROR)
-      ;; (asserts! (nft-repetition owner) NFT-REPETITION)
+      ;; (asserts! (nft-repetition owner) NFT-REPETITION) 
       (asserts! (>= (stx-get-balance sender) amount ) TRANSACTION-FAILED)
       (map-set will 
         {token-id: token-id}
@@ -81,7 +73,6 @@
       )
 
       
-      ;; (asserts! (unwrap! (stx-transfer? amount sender tx-sender) (err "unwrap failed during transaction")) TRANSACTION-FAILED)
       (asserts! (try! (stx-transfer? amount sender tx-sender)) TRANSACTION-FAILED)
       (var-set curr-token-index token-id)
 
